@@ -92,61 +92,11 @@ if ("${IS_LIBFQFFT_PARENT}")
     ${DEPENDS_DIR}/libff/
   )
 
-  add_executable(
-    polynomial_arithmetic_test
-    EXCLUDE_FROM_ALL
-
-    tests/init_test
-    tests/polynomial_arithmetic_test
-  )
-  target_link_libraries(
-    polynomial_arithmetic_test
-
-    ff
-    gtest_main
-  )
-  target_include_directories(
-    polynomial_arithmetic_test
-
-    PUBLIC
-    ${DEPENDS_DIR}/libff/
-  )
-
-  add_executable(
-    kronecker_substitution_test
-    EXCLUDE_FROM_ALL
-
-    tests/init_test
-    tests/kronecker_substitution_test
-  )
-  target_link_libraries(
-    kronecker_substitution_test
-
-    ff
-    gtest_main
-  )
-  target_include_directories(
-    kronecker_substitution_test
-
-    PUBLIC
-    ${DEPENDS_DIR}/libff/
-  )
-
   include(CTest)
   add_test(
     NAME evaluation_domain_test
     COMMAND evaluation_domain_test
   )
-  add_test(
-    NAME polynomial_arithmetic_test
-    COMMAND polynomial_arithmetic_test
-  )
-  add_test(
-    NAME kronecker_substitution_test
-    COMMAND kronecker_substitution_test
-  )
 
   add_dependencies(check evaluation_domain_test)
-  add_dependencies(check polynomial_arithmetic_test)
-  add_dependencies(check kronecker_substitution_test)
 endif()
