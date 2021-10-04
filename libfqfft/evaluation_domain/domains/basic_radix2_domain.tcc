@@ -37,7 +37,7 @@ bool basic_radix2_domain<FieldT>::valid_for_size(const size_t m)
             return false;
     }
 
-    if( get_root_of_unity_will_throw<FieldT>(m) )
+    if (get_root_of_unity_will_throw<FieldT>(m))
         return false;
 
     return true;
