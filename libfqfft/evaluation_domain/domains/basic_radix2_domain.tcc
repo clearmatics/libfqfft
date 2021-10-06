@@ -25,20 +25,13 @@ namespace libfqfft {
 template<typename FieldT>
 bool basic_radix2_domain<FieldT>::valid_for_size(const size_t m)
 {
-    if ( m <= 1 )
+    if (m <= 1) {
         return false;
-
-    // Will `get_root_of_unity` throw?
-    if (!std::is_same<FieldT, libff::Double>::value)
-    {
-        const size_t logm = libff::log2(m);
-
-        if (logm > FieldT::s)
-            return false;
     }
 
-    if (get_root_of_unity_will_throw<FieldT>(m))
+    if (!libff::has_root_of_unity<FieldT>(m)) {
         return false;
+    }
 
     return true;
 }

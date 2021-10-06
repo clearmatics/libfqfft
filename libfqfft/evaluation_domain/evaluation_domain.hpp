@@ -31,30 +31,6 @@
 
 namespace libfqfft {
 
-template<typename FieldT>
-typename std::enable_if<std::is_same<FieldT, libff::Double>::value, bool>::type
-get_root_of_unity_will_throw(const size_t /*n*/)
-{
-    return false;
-}
-
-
-template<typename FieldT>
-typename std::enable_if<!std::is_same<FieldT, libff::Double>::value, bool>::type
-get_root_of_unity_will_throw(const size_t n)
-{
-    const size_t logn = libff::log2(n);
-
-    if (n != (1u << logn))
-        return true;
-
-    if (logn > FieldT::s)
-        return true;
-
-    return false;
-}
-
-
 /**
  * An evaluation domain.
  */

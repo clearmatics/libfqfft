@@ -20,22 +20,26 @@ namespace libfqfft {
 template<typename FieldT>
 bool step_radix2_domain<FieldT>::valid_for_size(const size_t m)
 {
-    if (m <= 1)
+    if (m <= 1) {
         return false;
+    }
 
     const size_t big_m = 1ul<<(libff::log2(m)-1);
     const size_t small_m = m - big_m;
 
-    if (small_m != 1ul<<libff::log2(small_m))
+    if (small_m != 1ul<<libff::log2(small_m)) {
         return false;
+    }
 
     // omega
-    if (get_root_of_unity_will_throw<FieldT>(1ul<<libff::log2(m)))
+    if (!libff::has_root_of_unity<FieldT>(1ul<<libff::log2(m))) {
         return false;
+    }
 
     // small_omega
-    if (get_root_of_unity_will_throw<FieldT>(1ul<<libff::log2(small_m)))
+    if (!libff::has_root_of_unity<FieldT>(1ul<<libff::log2(small_m))) {
         return false;
+    }
 
     return true;
 }

@@ -36,8 +36,9 @@ bool extended_radix2_domain<FieldT>::valid_for_size(const size_t m)
 
     size_t small_m = m / 2;
 
-    if (get_root_of_unity_will_throw<FieldT>(small_m))
+    if (!libff::has_root_of_unity<FieldT>(small_m)) {
         return false;
+    }
 
     return true;
 }
