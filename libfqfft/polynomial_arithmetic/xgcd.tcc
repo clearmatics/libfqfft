@@ -4,7 +4,7 @@
  Implementation of interfaces for extended GCD routines.
 
  See xgcd.hpp .
- 
+
  *****************************************************************************
  * @author     This file is part of libfqfft, developed by SCIPR Lab
  *             and contributors (see AUTHORS).
@@ -58,9 +58,21 @@ void _polynomial_xgcd(const std::vector<FieldT> &a, const std::vector<FieldT> &b
     _polynomial_division(V1, R, V3, b);
 
     FieldT lead_coeff = G.back().inverse();
-    std::transform(G.begin(), G.end(), G.begin(), std::bind1st(std::multiplies<FieldT>(), lead_coeff));
-    std::transform(U.begin(), U.end(), U.begin(), std::bind1st(std::multiplies<FieldT>(), lead_coeff));
-    std::transform(V1.begin(), V1.end(), V1.begin(), std::bind1st(std::multiplies<FieldT>(), lead_coeff));
+    std::transform(
+        G.begin(),
+        G.end(),
+        G.begin(),
+        std::bind(std::multiplies<FieldT>(), lead_coeff, std::placeholders::_1));
+    std::transform(
+        U.begin(),
+        U.end(),
+        U.begin(),
+        std::bind(std::multiplies<FieldT>(), lead_coeff, std::placeholders::_1));
+    std::transform(
+        V1.begin(),
+        V1.end(),
+        V1.begin(),
+        std::bind(std::multiplies<FieldT>(), lead_coeff, std::placeholders::_1));
 
     g = G;
     u = U;

@@ -4,7 +4,7 @@
  Implementation of interfaces for basic polynomial operation routines.
 
  See basic_operations.hpp .
- 
+
  *****************************************************************************
  * @author     This file is part of libfqfft, developed by SCIPR Lab
  *             and contributors (see AUTHORS).
@@ -15,6 +15,7 @@
 #define BASIC_OPERATIONS_TCC_
 
 #include <algorithm>
+#include <functional>
 
 #include <libfqfft/evaluation_domain/domains/basic_radix2_domain_aux.hpp>
 #include <libfqfft/kronecker_substitution/kronecker_substitution.hpp>
@@ -75,7 +76,7 @@ void _polynomial_addition(std::vector<FieldT> &c, const std::vector<FieldT> &a, 
             std::copy(b.begin() + a_size, b.end(), c.begin() + a_size);
         }
     }
-        
+
     _condense(c);
 }
 
@@ -95,7 +96,7 @@ void _polynomial_subtraction(std::vector<FieldT> &c, const std::vector<FieldT> &
     {
         size_t a_size = a.size();
         size_t b_size = b.size();
-        
+
         if (a_size > b_size)
         {
             c.resize(a_size);
@@ -148,7 +149,11 @@ void _polynomial_multiplication_on_fft(std::vector<FieldT> &c, const std::vector
 #endif
 
     const FieldT sconst = FieldT(n).inverse();
-    std::transform(c.begin(), c.end(), c.begin(), std::bind1st(std::multiplies<FieldT>(), sconst));
+    std::transform(
+        c.begin(),
+        c.end(),
+        c.begin(),
+        std::bind(std::multiplies<FieldT>(), sconst, std::placeholders::_1));
     _condense(c);
 }
 
