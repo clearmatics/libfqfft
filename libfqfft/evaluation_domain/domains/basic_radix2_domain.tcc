@@ -23,6 +23,20 @@
 namespace libfqfft {
 
 template<typename FieldT>
+bool basic_radix2_domain<FieldT>::valid_for_size(const size_t m)
+{
+    if (m <= 1) {
+        return false;
+    }
+
+    if (!libff::has_root_of_unity<FieldT>(m)) {
+        return false;
+    }
+
+    return true;
+}
+
+template<typename FieldT>
 basic_radix2_domain<FieldT>::basic_radix2_domain(const size_t m) : evaluation_domain<FieldT>(m)
 {
     if (m <= 1) throw InvalidSizeException("basic_radix2(): expected m > 1");

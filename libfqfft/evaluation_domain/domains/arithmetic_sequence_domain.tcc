@@ -24,6 +24,20 @@
 namespace libfqfft {
 
 template<typename FieldT>
+bool arithmetic_sequence_domain<FieldT>::valid_for_size(const size_t m)
+{
+  if (m <= 1) {
+    return false;
+  }
+
+  if (FieldT::arithmetic_generator() == FieldT::zero()) {
+    return false;
+  }
+
+  return true;
+}
+
+template<typename FieldT>
 arithmetic_sequence_domain<FieldT>::arithmetic_sequence_domain(const size_t m) : evaluation_domain<FieldT>(m)
 {
   if (m <= 1) throw InvalidSizeException("arithmetic(): expected m > 1");
@@ -42,7 +56,7 @@ void arithmetic_sequence_domain<FieldT>::FFT(std::vector<FieldT> &a)
 
   /* Monomial to Newton */
   monomial_to_newton_basis(a, this->subproduct_tree, this->m);
-  
+
   /* Newton to Evaluation */
   std::vector<FieldT> S(this->m); /* i! * arithmetic_generator */
   S[0] = FieldT::one();
@@ -70,7 +84,7 @@ template<typename FieldT>
 void arithmetic_sequence_domain<FieldT>::iFFT(std::vector<FieldT> &a)
 {
   if (a.size() != this->m) throw DomainSizeException("arithmetic: expected a.size() == this->m");
-  
+
   if (!this->precomputation_sentinel) do_precomputation();
 
   /* Interpolation to Newton */
@@ -152,7 +166,7 @@ std::vector<FieldT> arithmetic_sequence_domain<FieldT>::evaluate_all_lagrange_po
 
   std::vector<FieldT> w(this->m);
   w[0] = g_vanish.inverse() * (this->arithmetic_generator^(this->m-1));
-  
+
   l[0] = l_vanish * l[0].inverse() * w[0];
   for (size_t i = 1; i < this->m; i++)
   {

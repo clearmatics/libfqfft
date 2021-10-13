@@ -27,6 +27,7 @@
 #define EVALUATION_DOMAIN_HPP_
 
 #include <vector>
+#include <libff/common/double.hpp>
 
 namespace libfqfft {
 

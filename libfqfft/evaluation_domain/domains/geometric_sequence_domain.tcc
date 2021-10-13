@@ -24,18 +24,32 @@
 namespace libfqfft {
 
 template<typename FieldT>
+bool geometric_sequence_domain<FieldT>::valid_for_size(const size_t m)
+{
+  if (m <= 1) {
+      return false;
+  }
+
+  if (FieldT::geometric_generator() == FieldT::zero()) {
+      return false;
+  }
+
+  return true;
+}
+
+template<typename FieldT>
 geometric_sequence_domain<FieldT>::geometric_sequence_domain(const size_t m) : evaluation_domain<FieldT>(m)
 {
   if (m <= 1) throw InvalidSizeException("geometric(): expected m > 1");
   if (FieldT::geometric_generator() == FieldT::zero())
     throw InvalidSizeException("geometric(): expected FieldT::geometric_generator() != FieldT::zero()");
-  
+
   precomputation_sentinel = 0;
 }
 
 template<typename FieldT>
 void geometric_sequence_domain<FieldT>::FFT(std::vector<FieldT> &a)
-{ 
+{
   if (a.size() != this->m) throw DomainSizeException("geometric: expected a.size() == this->m");
 
   if (!this->precomputation_sentinel) do_precomputation();
@@ -71,7 +85,7 @@ template<typename FieldT>
 void geometric_sequence_domain<FieldT>::iFFT(std::vector<FieldT> &a)
 {
   if (a.size() != this->m) throw DomainSizeException("geometric: expected a.size() == this->m");
-  
+
   if (!this->precomputation_sentinel) do_precomputation();
 
   /* Interpolation to Newton */

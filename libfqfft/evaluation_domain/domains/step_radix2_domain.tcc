@@ -18,6 +18,33 @@
 namespace libfqfft {
 
 template<typename FieldT>
+bool step_radix2_domain<FieldT>::valid_for_size(const size_t m)
+{
+    if (m <= 1) {
+        return false;
+    }
+
+    const size_t big_m = 1ul<<(libff::log2(m)-1);
+    const size_t small_m = m - big_m;
+
+    if (small_m != 1ul<<libff::log2(small_m)) {
+        return false;
+    }
+
+    // omega
+    if (!libff::has_root_of_unity<FieldT>(1ul<<libff::log2(m))) {
+        return false;
+    }
+
+    // small_omega
+    if (!libff::has_root_of_unity<FieldT>(1ul<<libff::log2(small_m))) {
+        return false;
+    }
+
+    return true;
+}
+
+template<typename FieldT>
 step_radix2_domain<FieldT>::step_radix2_domain(const size_t m) : evaluation_domain<FieldT>(m)
 {
     if (m <= 1) throw InvalidSizeException("step_radix2(): expected m > 1");
@@ -30,7 +57,7 @@ step_radix2_domain<FieldT>::step_radix2_domain(const size_t m) : evaluation_doma
 
     try { omega = libff::get_root_of_unity<FieldT>(1ul<<libff::log2(m)); }
     catch (const std::invalid_argument& e) { throw DomainSizeException(e.what()); }
-    
+
     big_omega = omega.squared();
     small_omega = libff::get_root_of_unity<FieldT>(small_m);
 }
